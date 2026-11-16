@@ -1,0 +1,19 @@
+{
+  "name": "erc3643-key-census",
+  "version": "1.0.0",
+  "description": "Who holds the keys of ERC-3643 token issuances on Polygon and Ethereum: a recountable, read-only census.",
+  "type": "module",
+  "license": "MIT",
+  "author": "holistis (https://github.com/holistis)",
+  "repository": { "type": "git", "url": "git+https://github.com/holistis/erc3643-key-census.git" },
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node --test",
+    "check": "node check.mjs",
+    "selftest": "node check.mjs --selftest",
+    "verify-chain": "node check.mjs --verify-chain"
+  },
+  "files": ["lib", "assets", "discover.mjs", "census.mjs", "check.mjs", "data", "README.md", "README.es.md", "LICENSE", "CITATION.cff"],
+  "dependencies": {},
+  "devDependencies": {}
+}

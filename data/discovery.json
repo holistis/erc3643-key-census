@@ -1,0 +1,23 @@
+{
+ "event": "TREXSuiteDeployed(address,address,address,address,address,address,string)",
+ "topic0": "0x057adae5fa3e9caa8a0d584edff60f61558d33f073412ec2d66d558b739e0a41",
+ "scanned_at": "2026-11-16T21:27:18.099Z",
+ "nets": {
+  "polygon": {
+   "from_block": 0,
+   "to_block": 97439388,
+   "events": 3363,
+   "duplicates_skipped": 0,
+   "unique_tokens": 3363,
+   "distinct_factories": 202
+  },
+  "ethereum": {
+   "from_block": 0,
+   "to_block": 26430287,
+   "events": 64,
+   "duplicates_skipped": 0,
+   "unique_tokens": 64,
+   "distinct_factories": 20
+  }
+ }
+}

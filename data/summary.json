@@ -1,0 +1,55 @@
+{
+ "measured": {
+  "duplicates_skipped": 0,
+  "invalid_address_skipped": 0,
+  "transport_failures": 0,
+  "block_start": {
+   "polygon": 97439700,
+   "ethereum": 26430325
+  },
+  "block_end": {
+   "polygon": 97439702,
+   "ethereum": 26430325
+  },
+  "started": "2026-11-16T21:35:06.803Z",
+  "finished": "2026-11-16T21:35:10.677Z",
+  "list_lines": 3427,
+  "unique": 3427
+ },
+ "summary": {
+  "tokens": 3427,
+  "polygon": 3363,
+  "ethereum": 64,
+  "active": 1052,
+  "distinct_factories": 222,
+  "types_all": {
+   "account_direct": 2870,
+   "account_via_contract": 281,
+   "other_contract": 83,
+   "renounced": 4,
+   "safe_multisig": 10,
+   "safe_threshold_1": 179
+  },
+  "types_active": {
+   "account_direct": 868,
+   "account_via_contract": 124,
+   "other_contract": 36,
+   "renounced": 1,
+   "safe_multisig": 8,
+   "safe_threshold_1": 15
+  },
+  "all": {
+   "single_key_pct": 97.2,
+   "multi_party_pct": 0.3
+  },
+  "active_share": {
+   "single_key_pct": 95.7,
+   "multi_party_pct": 0.8
+  },
+  "eip7702_tokens": 822,
+  "distinct_controllers_all": 383,
+  "distinct_controllers_active": 222,
+  "top10_controllers_share_active_pct": 45.7,
+  "top50_controllers_share_active_pct": 80
+ }
+}
