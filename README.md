@@ -122,6 +122,8 @@ Corrections are listed here and are never silent. If you recount and get a diffe
 
 holistis (github.com/holistis), ERC-3643 key-control census, 16 November 2026, https://github.com/holistis/erc3643-key-census
 
+Archived on Zenodo: DOI 10.5281/zenodo.24323265 (always the latest version). Version 1.1.0: DOI 10.5281/zenodo.24323266, https://doi.org/10.5281/zenodo.24323266
+
 ## License
 
 Code: MIT, see LICENSE. Data in `data/`: CC BY 4.0, please cite as above.
