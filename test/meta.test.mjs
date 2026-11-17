@@ -9,6 +9,7 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 
+const AG = "lib/validate-agents.mjs";
 const breaks = [
   ["fingerprint check", "if (!m || m[1] !== hash) errors.push(", "if (false) errors.push("],
   ["summary comparison", "if (!same(fresh, summary.summary)) errors.push(", "if (false) errors.push("],
@@ -29,6 +30,24 @@ const breaks = [
   ["network check", "if (!NETS.has(r.net)) errors.push(", "if (false) errors.push("],
   ["active flag check", "if (r.active !== isActive(r)) errors.push(", "if (false) errors.push("],
   ["account_direct consistency", "errors.push(`${p}: account_direct but chain and owner disagree`)", "void 0"],
+  // agent data: every check below needs a planted error that no other check can see (see agentMutations in check.mjs)
+  ["agent summary comparison", "if (!same(fresh, summary.summary)) errors.push(", "if (false) errors.push(", AG],
+  ["agent event count identity", "|| counted !== expected) errors.push(", "|| false) errors.push(", AG],
+  ["agent level check", "if (r.level !== rowLevel(r)) errors.push(", "if (false) errors.push(", AG],
+  ["agent owner_type mirror", "if (r.owner_type !== o.type) errors.push(", "if (false) errors.push(", AG],
+  ["agent active mirror", "if (r.active !== o.active) errors.push(", "if (false) errors.push(", AG],
+  ["agents row missing for a token", "for (const k of owner.keys()) if (!mine.has(k)) errors.push(", "for (const k of owner.keys()) if (false) errors.push(", AG],
+  ["agents row not in tokens.json", "for (const k of mine.keys()) if (!owner.has(k)) errors.push(", "for (const k of mine.keys()) if (false) errors.push(", AG],
+  ["agent duplicate token row", "if (seen.has(key(r))) errors.push(", "if (false) errors.push(", AG],
+  ["agent address format", "if (!a || !ADDR_LOWER.test(String(a.address))) {", "if (false) {", AG],
+  ["agent listed twice", "if (addrs.has(a.address)) errors.push(", "if (false) errors.push(", AG],
+  ["agent type check", "if (!AGENT_TYPES.includes(a.type)) {", "if (false) {", AG],
+  ["account_direct agent consistency", "if (c !== a.address) errors.push(", "if (false) errors.push(", AG],
+  ["account_via_contract agent consistency", "if (!(ADDR_LOWER.test(String(c)) && c !== a.address)) errors.push(", "if (false) errors.push(", AG],
+  ["agent fingerprint in SHA256SUMS", "if (!fm || fm[1] !== hash) errors.push(", "if (false) errors.push(", AG],
+  ["agent fingerprint in the README", 'if (!readme.includes("`" + hash + "`")) errors.push(', "if (false) errors.push(", AG],
+  ["agent README numbers comparison", "if (published && !same(published, headlineAgents(fresh))) errors.push(", "if (false) errors.push(", AG],
+  ["agent README sentences comparison", "else if (sentences[1].trim() !== agentText(fresh, summary.measured)) errors.push(", "else if (false) errors.push(", AG],
   // The empty list is guarded twice on purpose (validateRows and checkAll), so disabling one guard
   // must NOT turn the selftest red; that case is covered by the "emptied" mutation in check.mjs.
 ];

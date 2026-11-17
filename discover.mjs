@@ -16,7 +16,7 @@ export const DEFAULT_LOG_RPC = {
   ethereum: "https://gateway.tenderly.co/public/mainnet",
 };
 
-async function rpc(url, method, params, tries = 3) {
+export async function rpc(url, method, params, tries = 3) {
   let last;
   for (let i = 0; i < tries; i++) {
     try {
@@ -33,9 +33,9 @@ async function rpc(url, method, params, tries = 3) {
 }
 
 /** Scans [from, to]. chunk 0 asks for the whole range at once; on an error the range is split until minWindow. */
-export async function scanLogs(url, from, to, { chunk = 0, minWindow = 1000, tries = 3 } = {}) {
+export async function scanLogs(url, from, to, { chunk = 0, minWindow = 1000, tries = 3, topic = TOPIC0 } = {}) {
   const hex = (n) => "0x" + n.toString(16);
-  const one = (a, b) => rpc(url, "eth_getLogs", [{ topics: [TOPIC0], fromBlock: hex(a), toBlock: hex(b) }], tries);
+  const one = (a, b) => rpc(url, "eth_getLogs", [{ topics: [topic], fromBlock: hex(a), toBlock: hex(b) }], tries);
   const out = [];
   const range = async (a, b) => {
     try {

@@ -15,7 +15,7 @@ Para cada token creado mediante el evento estándar `TREXSuiteDeployed` de una f
 ## Lo que esto no muestra
 
 - Una dirección de cuenta puede estar respaldada por un sistema de custodia (MPC, HSM, un custodio). Eso no se ve en la cadena, así que "una sola clave" quiere decir "una sola dirección".
-- Solo se midió el rol `owner()`, no los agentes que pueden emitir, congelar o transferir por la fuerza.
+- Las cifras de arriba miden solo el rol `owner()`. Los agentes, que pueden emitir, congelar o transferir por la fuerza, se miden en la sección "Agents and levels" del README en inglés, con los niveles definidos en LEVELS.md.
 - Solo están las emisiones creadas con el evento estándar de la fábrica.
 - Es una observación sobre quién puede actuar. No afirma que algo esté mal, no nombra a ningún emisor ni plataforma y no hace ninguna afirmación sobre un emisor concreto.
 

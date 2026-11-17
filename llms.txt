@@ -1,10 +1,11 @@
 # ERC-3643 key-control census
 
-> A recountable, read-only census of who owns ERC-3643 token issuances on Polygon and Ethereum. Open data, open code, a one-command recount, a selftest that plants errors, and a weekly time series. It measures the owner role only and states what it does not show.
+> A recountable, read-only census of who owns ERC-3643 token issuances on Polygon and Ethereum. Open data, open code, a one-command recount, a selftest that plants errors, and a weekly time series. It measures the owner role and the agent role, defines control levels, and states what it does not show.
 
 ## Start here
 
 - [README](https://github.com/holistis/erc3643-key-census/blob/main/README.md): the numbers, what was measured, what it does not show, how to recount
+- [Control levels](https://github.com/holistis/erc3643-key-census/blob/main/LEVELS.md): Level 0 and Level 1, defined by the weakest role holder, with what a level does not say
 - [Data summary](https://github.com/holistis/erc3643-key-census/blob/main/data/summary.json): the counts behind the numbers, with the measurement blocks
 - [Time series](https://github.com/holistis/erc3643-key-census/blob/main/history/series.csv): one row per weekly measurement
 

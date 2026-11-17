@@ -1,7 +1,8 @@
 {
   "title": "ERC-3643 key-control census",
   "upload_type": "dataset",
-  "description": "A recountable, read-only census of who owns ERC-3643 token issuances on Polygon and Ethereum, with the code that builds the list, the code that counts, a recount script with a selftest that plants errors, and a weekly time series. It measures the owner role only and states what it does not show.",
+  "version": "1.1.0",
+  "description": "A recountable, read-only census of who owns ERC-3643 token issuances on Polygon and Ethereum, with the code that builds the list, the code that counts, a recount script with a selftest that plants errors, and a weekly time series. It measures the owner role and the agent role, defines two control levels, and states what it does not show.",
   "creators": [{ "name": "holistis" }],
   "license": "cc-by-4.0",
   "access_right": "open",

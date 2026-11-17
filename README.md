@@ -52,11 +52,32 @@ Single key means: one account address, or a Safe that needs only one signature. 
 ## What this does not show
 
 - An account address can be backed by custody software (MPC, HSM, a custodian). That cannot be seen on a chain, so "single key" means "a single address", not "a single private key".
-- Only the `owner()` role was measured. Agents, who in ERC-3643 can mint, freeze or force transfers, were not.
+- The numbers at the top measure the `owner()` role only. Agents, who in ERC-3643 can mint, freeze or force transfers, are measured in the next section. Only the agents of the token contract are read, not those of its identity registry.
 - A Safe with a threshold of two or more is counted as multi party even when a module (for example a delay or roles module) lets fewer signers act. A timelock is counted as multi party even when one account proposes. Compound-style timelocks and governors are in other_contract.
 - Only issuances announced by the standard factory event are in the list. Issuers that deploy in another way are not.
 - Supply is not value. A large share of issuances is probably small or test deployments.
 - This is an observation about who can act. It is not a statement that anything is wrong. No issuer or platform is named, and no claim is made about any specific issuer. Addresses are public chain data.
+
+## Agents and levels
+
+In ERC-3643 the owner adds and removes agents, and every agent can mint, burn, freeze and force transfers on its own (`onlyAgent` in the T-REX token contract). So the owner is only half of the picture. `node agents.mjs data/tokens.json data` reads the public `AgentAdded` and `AgentRemoved` events of every token in the list, replays them in order, and classifies each current agent the same way as the owner.
+
+<!--AGENTSUMMARY-->
+Of 3427 token issuances, 3186 have at least one agent (789 distinct agent addresses in total). In ERC-3643 an agent can mint, burn, freeze and force transfers on its own, and the owner can add and remove agents.
+86.2% of all issuances, and 90.2% of the 1052 active ones, have at least one agent that is directly an account or a Safe that needs one signature. Counting also agents that are contracts whose owner() chain ends at an account, the shares are 91.9% and 97.2%.
+By the weakest role holder (the owner and every agent), 98.5% of issuances are at Level 0, 0.3% at Level 1 and 1.2% are not classified. Among the active issuances the shares are 97.2%, 0.8% and 2%.
+No issuance whose owner is a Safe with a threshold of two or more is held at Level 0 by a single-key agent.
+Event counts behind the agent list: 6633 AgentAdded, 547 AgentRemoved, 0 repeated adds and 0 removals of an agent that was not listed, which leaves 6086 agents.
+Agent events were read up to Polygon block 97478850 and Ethereum block 26435223.
+<!--/AGENTSUMMARY-->
+
+<!--AGENTNUMBERS {"tokens_with_agents":3186,"agents_distinct":789,"single_key_agent_direct_pct_all":86.2,"single_key_agent_direct_pct_active":90.2,"single_key_agent_pct_all":91.9,"single_key_agent_pct_active":97.2,"level0_pct_all":98.5,"level1_pct_all":0.3,"not_classified_pct_all":1.2,"level0_pct_active":97.2,"level1_pct_active":0.8,"not_classified_pct_active":2,"owner_multisig_held_down":0} -->
+
+Agent data fingerprint (sha256 of data/agents.json): `f2bba33d1211a970441367094d1b71311026014877de0c9895e8abe1faf5e35e`
+
+The agent data is one snapshot, like `data/tokens.json`. It is not part of the weekly series yet. Agents were read up to the blocks above, while the agent addresses were classified at the time the script ran, so a later recount can differ where an owner or a Safe changed since.
+
+Levels are defined in [LEVELS.md](LEVELS.md). Level 0 means at least one role holder is a single key that can act alone. Level 1 means every role holder is a Safe that needs two or more signatures. Levels describe structure, not safety. `check.mjs` also checks the agent data: the rows against the token list, the level of every row, the counts and the number of agents against the event counts, so an agent dropped or invented on its own is seen. Moving agents between rows in a consistently edited copy is not seen offline, only by a recount.
 
 ## Recount it yourself
 
@@ -69,6 +90,8 @@ node check.mjs --verify-chain   # re-measures a deterministic sample of 200 toke
 node discover.mjs list.json     # rebuilds the token list from the chains
 node census.mjs list.json out/  # re-measures every token (numbers drift as owners change and new issuances appear)
 node check.mjs --compare out/tokens.json   # compares your full recount with data/tokens.json
+node check.mjs --verify-agents   # asks the token contracts themselves isAgent(address) for a deterministic sample of 300 listed agents; red above 5 percent no, --strict for any
+node agents.mjs data/tokens.json out/   # re-reads the agent events up to the latest block and re-classifies every agent
 node history.mjs update --census out/   # record a new measurement in history/ (refused if it cannot be complete)
 node --test                     # unit tests, including a mock RPC server for discovery and for the whole counting process
 ```

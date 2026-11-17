@@ -1,6 +1,6 @@
 {
   "name": "erc3643-key-census",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Who holds the keys of ERC-3643 token issuances on Polygon and Ethereum: a recountable, read-only census.",
   "type": "module",
   "license": "MIT",
@@ -13,7 +13,7 @@
     "selftest": "node check.mjs --selftest",
     "verify-chain": "node check.mjs --verify-chain"
   },
-  "files": ["lib", "assets", "history", "history.mjs", "discover.mjs", "census.mjs", "check.mjs", "AGENTS.md", "llms.txt", "RECOUNTS.md", "data", "README.md", "README.es.md", "LICENSE", "CITATION.cff"],
+  "files": ["lib", "assets", "history", "history.mjs", "discover.mjs", "census.mjs", "agents.mjs", "check.mjs", "LEVELS.md", "AGENTS.md", "llms.txt", "RECOUNTS.md", "data", "README.md", "README.es.md", "LICENSE", "CITATION.cff"],
   "dependencies": {},
   "devDependencies": {}
 }
