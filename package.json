@@ -11,9 +11,10 @@
     "test": "node --test",
     "check": "node check.mjs",
     "selftest": "node check.mjs --selftest",
-    "verify-chain": "node check.mjs --verify-chain"
+    "verify-chain": "node check.mjs --verify-chain",
+    "card": "node card.mjs"
   },
-  "files": ["lib", "assets", "history", "history.mjs", "discover.mjs", "census.mjs", "agents.mjs", "check.mjs", "LEVELS.md", "AGENTS.md", "llms.txt", "RECOUNTS.md", "data", "README.md", "README.es.md", "LICENSE", "CITATION.cff"],
+  "files": ["lib", "assets", "history", "history.mjs", "discover.mjs", "census.mjs", "agents.mjs", "card.mjs", "check.mjs", "LEVELS.md", "AGENTS.md", "llms.txt", "RECOUNTS.md", "data", "README.md", "README.es.md", "LICENSE", "CITATION.cff"],
   "dependencies": {},
   "devDependencies": {}
 }

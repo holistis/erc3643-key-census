@@ -7,6 +7,7 @@
 - [README](https://github.com/holistis/erc3643-key-census/blob/main/README.md): the numbers, what was measured, what it does not show, how to recount
 - [Control levels](https://github.com/holistis/erc3643-key-census/blob/main/LEVELS.md): Level 0 and Level 1, defined by the weakest role holder, with what a level does not say
 - [Data summary](https://github.com/holistis/erc3643-key-census/blob/main/data/summary.json): the counts behind the numbers, with the measurement blocks
+- Look up one token: `node card.mjs <address>` prints its owner, its agents and its level in words, after recounting the data
 - [Time series](https://github.com/holistis/erc3643-key-census/blob/main/history/series.csv): one row per weekly measurement
 
 ## Reference
