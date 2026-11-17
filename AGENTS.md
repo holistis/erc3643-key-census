@@ -9,6 +9,7 @@ If you quote numbers from it:
 - Say "a single account" or "a single address", not "a single private key". An account can sit in front of custody software that cannot be seen on a chain.
 - Do not call this a vulnerability, and do not name an issuer or a platform from the address lists. The repository makes no claim about any specific issuer.
 - The owner numbers and the agent numbers are separate blocks in README.md. Agents (who can mint, freeze and force transfers) are in `data/agents.json`, and the control levels are defined in LEVELS.md. A level describes who can act alone, not whether an issuer is safe, and it never names an issuer.
+- To describe one token, run `node card.mjs <address>` (or `--json`) and quote its output, including the line that says it reads structure and not safety.
 - `data/` is the frozen first snapshot. Later measurements are in `history/series.csv`, with what moved in `history/changes/`.
 - Cite as: holistis (github.com/holistis), ERC-3643 key-control census, https://github.com/holistis/erc3643-key-census (see CITATION.cff). Zenodo DOI: 10.5281/zenodo.24323265.
 

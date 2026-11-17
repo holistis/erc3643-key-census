@@ -92,6 +92,7 @@ node census.mjs list.json out/  # re-measures every token (numbers drift as owne
 node check.mjs --compare out/tokens.json   # compares your full recount with data/tokens.json
 node check.mjs --verify-agents   # asks the token contracts themselves isAgent(address) for a deterministic sample of 300 listed agents; red above 5 percent no, --strict for any
 node agents.mjs data/tokens.json out/   # re-reads the agent events up to the latest block and re-classifies every agent
+node card.mjs 0xTokenAddress    # one token in words: owner, agents, level; recounts the data first and prints nothing if the recount fails
 node history.mjs update --census out/   # record a new measurement in history/ (refused if it cannot be complete)
 node --test                     # unit tests, including a mock RPC server for discovery and for the whole counting process
 ```
