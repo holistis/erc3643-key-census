@@ -17,7 +17,7 @@ import { compareRows, verifyVerdict } from "./lib/compare.mjs";
 import { runCensus, DEFAULT_RPC } from "./census.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const FILES = ["data/tokens.json", "data/summary.json", "data/SHA256SUMS", "data/discovery.json", "data/tokens.csv", "README.md", "assets/key-control.svg"];
+const FILES = ["data/tokens.json", "data/summary.json", "data/SHA256SUMS", "data/discovery.json", "data/tokens.csv", "history/series.csv", "history/latest.json", "README.md", "assets/key-control.svg"];
 
 /** The mutation matrix: change, remove, add, duplicate, swap, empty, truncate, variant. */
 export function mutations(baseTokens) {
@@ -50,6 +50,12 @@ export function mutations(baseTokens) {
     ["discovery.json missing", (f) => { f["data/discovery.json"] = null; }],
     ["value changed in tokens.csv", (f) => { f["data/tokens.csv"] = f["data/tokens.csv"].replace(/,(account_direct|account_via_contract),/, ",safe_multisig,"); }],
     ["tokens.csv missing", (f) => { f["data/tokens.csv"] = null; }],
+    ["series.csv: tokens fell", (f) => { const l = f["history/series.csv"].trimEnd().split("\n"); const c = l[l.length - 1].split(","); c[0] = "2099-01-01"; c[3] = String(Number(c[3]) - 1); c[4] = String(Math.min(Number(c[4]), Number(c[3]))); f["history/series.csv"] = f["history/series.csv"].trimEnd() + "\n" + c.join(",") + "\n"; const x = JSON.parse(f["history/latest.json"]); x.pop(); f["history/latest.json"] = JSON.stringify(x); }],
+    ["series.csv: date does not move forward", (f) => { const l = f["history/series.csv"].trimEnd().split("\n"); f["history/series.csv"] = f["history/series.csv"].trimEnd() + "\n" + l[l.length - 1] + "\n"; }],
+    ["series.csv: token count differs from latest.json", (f) => { const l = f["history/series.csv"].trimEnd().split("\n"); const c = l[l.length - 1].split(","); c[3] = String(Number(c[3]) + 1); l[l.length - 1] = c.join(","); f["history/series.csv"] = l.join("\n") + "\n"; }],
+    ["latest.json: invalid address", (f) => { const x = JSON.parse(f["history/latest.json"]); x[0].token = "0x123"; f["history/latest.json"] = JSON.stringify(x); }],
+    ["latest.json: one row removed", (f) => { const x = JSON.parse(f["history/latest.json"]); x.pop(); f["history/latest.json"] = JSON.stringify(x); }],
+    ["history/series.csv missing", (f) => { f["history/series.csv"] = null; }],
     ["fingerprint line changed", (f) => { f["data/SHA256SUMS"] = f["data/SHA256SUMS"].replace(/^./, (c) => (c === "0" ? "1" : "0")); }],
     ["file missing (summary.json)", (f) => { f["data/summary.json"] = null; }],
     ["self_owned row with a chain", edit((r) => { r[0].type = "self_owned"; r[0].owner = r[0].token; r[0].chain = ["0x" + "cd".repeat(20)]; r[0].controller = null; r[0].detail = null; })],

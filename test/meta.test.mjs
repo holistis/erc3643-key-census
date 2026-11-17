@@ -18,6 +18,10 @@ const breaks = [
   ["self_owned consistency", "if (!(r.owner === r.token && r.chain.length === 0 && r.controller === null)) errors.push(", "if (false) errors.push("],
   ["cycle consistency", "if (!(r.controller === null && r.chain.length >= 1 && r.chain[0] === r.owner)) errors.push(", "if (false) errors.push("],
   ["csv comparison", 'else if (csvFile !== csvText(rows)) errors.push(', "else if (false) errors.push("],
+  ["history: tokens may not fall", "if (rows[i].tokens < rows[i - 1].tokens) errors.push(", "if (false) errors.push(", "lib/history.mjs"],
+  ["history: dates must move forward", "if (rows[i].date <= rows[i - 1].date) errors.push(", "if (false) errors.push(", "lib/history.mjs"],
+  ["history: latest.json count equals the last series row", "if (rows.length && rows[rows.length - 1].tokens !== latest.length) errors.push(", "if (false) errors.push(", "lib/history.mjs"],
+  ["history: latest.json addresses", "if (!r || !NETS.has(r.net) || !ADDR.test(String(r.token))) { errors.push(", "if (false) { errors.push(", "lib/history.mjs"],
   ["chart comparison", 'else if (chart !== chartSvg(fresh)) errors.push(', "else if (false) errors.push("],
   ["address format check", "if (!ADDR_LOWER.test(String(r.token))) errors.push(", "if (false) errors.push("],
   ["duplicate check", "if (seen.has(k)) errors.push(", "if (false) errors.push("],
@@ -29,12 +33,12 @@ const breaks = [
   // must NOT turn the selftest red; that case is covered by the "emptied" mutation in check.mjs.
 ];
 
-for (const [name, from, to] of breaks) {
+for (const [name, from, to, file = "lib/validate.mjs"] of breaks) {
   test(`selftest turns red when the ${name} is disabled`, () => {
     const dir = mkdtempSync(join(tmpdir(), "census-meta-"));
     try {
-      for (const f of ["lib", "data", "assets", "check.mjs", "census.mjs", "discover.mjs", "README.md", "package.json"]) cpSync(join(ROOT, f), join(dir, f), { recursive: true });
-      const p = join(dir, "lib/validate.mjs");
+      for (const f of ["lib", "data", "assets", "history", "check.mjs", "census.mjs", "discover.mjs", "history.mjs", "README.md", "package.json"]) cpSync(join(ROOT, f), join(dir, f), { recursive: true });
+      const p = join(dir, file);
       const src = readFileSync(p, "utf8");
       assert.ok(src.includes(from), "the patch target was not found, so this test would prove nothing: " + from);
       writeFileSync(p, src.replace(from, to));

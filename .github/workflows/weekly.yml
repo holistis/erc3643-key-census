@@ -1,0 +1,38 @@
+name: weekly-history
+on:
+  schedule:
+    - cron: "23 4 * * 1"
+  workflow_dispatch:
+concurrency:
+  group: weekly-history
+  cancel-in-progress: false
+permissions:
+  contents: write
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # the frozen snapshot and the tools must be healthy before a new measurement is recorded
+      - run: node --test
+      - run: node check.mjs
+      - run: node discover.mjs out/list.json --meta out/discovery.json
+      - run: node census.mjs out/list.json out/data
+      # refuses a measurement that cannot be complete (fewer tokens than before, unreadable or failed calls)
+      - run: node history.mjs update --census out/data
+      - run: node check.mjs
+      - name: Commit the history
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add history
+          if git diff --cached --quiet; then
+            echo "nothing to record"
+          else
+            git commit -m "history: weekly measurement $(date -u +%F)"
+            git push
+          fi

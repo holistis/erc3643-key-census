@@ -69,6 +69,7 @@ node check.mjs --verify-chain   # re-measures a deterministic sample of 200 toke
 node discover.mjs list.json     # rebuilds the token list from the chains
 node census.mjs list.json out/  # re-measures every token (numbers drift as owners change and new issuances appear)
 node check.mjs --compare out/tokens.json   # compares your full recount with data/tokens.json
+node history.mjs update --census out/   # record a new measurement in history/ (refused if it cannot be complete)
 node --test                     # unit tests, including a mock RPC server for discovery and for the whole counting process
 ```
 
@@ -77,6 +78,18 @@ node --test                     # unit tests, including a mock RPC server for di
 An early version of the classifier counted accounts with EIP-7702 delegation as contracts. That was found by sampling on a second node, corrected, and is now covered by tests.
 
 Counts of anything skipped, duplicated or unreadable are part of the numbers block above, under `discarded`.
+
+## History
+
+`data/` is the frozen first snapshot of 16 November 2026, which the numbers above describe. A scheduled job measures again every week and records one row in [history/series.csv](history/series.csv), the state in [history/latest.json](history/latest.json) and, when something moved, what moved in `history/changes/`. The job refuses to record a measurement that cannot be complete: issuances are announced by an event and cannot be un-announced, so the list only grows, and a measurement with fewer tokens than before is thrown away. `node check.mjs` checks the history files offline.
+
+## Break our counter
+
+Find a counting error and you are credited in [RECOUNTS.md](RECOUNTS.md). The challenge is open in [issue 1](https://github.com/holistis/erc3643-key-census/issues/1): a wrong type or controller, a token missing from the list, or a planted error that the recount script lets through. There is no bounty, only credit.
+
+## For AI agents
+
+See [AGENTS.md](AGENTS.md) and [llms.txt](llms.txt) for how to quote the numbers without overclaiming.
 
 ## Corrections and recounts
 
