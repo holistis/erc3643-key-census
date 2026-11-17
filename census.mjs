@@ -27,6 +27,39 @@ const pool = async (items, n, fn) => {
 };
 const chunks = (arr, n) => { const o = []; for (let i = 0; i < arr.length; i += n) o.push(arr.slice(i, i + n)); return o; };
 
+/**
+ * Reads what classify() needs about a set of start addresses: code, Safe threshold, timelock, and the owner() of
+ * contracts, followed up to six rounds deep. Shared by the owner census and the agent census.
+ */
+export async function resolveWorld(ch, startAddrs) {
+  const code = new Map(), safe = new Map(), tl = new Set(), own = new Map(), delegated = new Set();
+  let front = [...new Set(startAddrs.filter((a) => a && a !== ZERO && a !== DEAD))];
+  for (let depth = 0; depth < 6 && front.length; depth++) {
+    const fresh = front.filter((a) => !code.has(a));
+    const cm = await ch.codes(fresh);
+    for (const [a, c] of cm) { code.set(a, c.size); if (c.delegated) delegated.add(a); }
+    const contracts = fresh.filter((a) => (code.get(a) || 0) > 0);
+    const cc = [];
+    for (const a of contracts) for (const f of ["getThreshold", "getOwners", "getMinDelay", "owner"]) cc.push({ target: a, data: SEL[f] });
+    const rr = (await pool(chunks(cc, 200), 3, (d) => ch.multicall(d))).flat();
+    const next = new Set();
+    contracts.forEach((a, i) => {
+      const [th, ow, md, on] = rr.slice(i * 4, i * 4 + 4);
+      const thr = th.ok ? decUint(th.data) : undefined;
+      const n = ow.ok ? decArrayLength(ow.data) : undefined;
+      if (thr !== undefined && n !== undefined) safe.set(a, { threshold: Number(thr), n });
+      else if (md.ok) tl.add(a);
+      else if (on.ok) {
+        const x = decAddress(on.data);
+        if (x) { own.set(a, x); if (!code.has(x) && x !== ZERO && x !== DEAD) next.add(x); }
+      }
+    });
+    front = [...next];
+  }
+  const W = { code: (a) => code.get(a), safe: (a) => safe.get(a) || null, timelock: (a) => tl.has(a), owner: (a) => own.get(a) || null };
+  return { W, delegated };
+}
+
 export async function runCensus(list, rpcUrls = DEFAULT_RPC, { log = () => {}, chainOptions = {} } = {}) {
   const started = new Date().toISOString();
   const meta = { duplicates_skipped: 0, invalid_address_skipped: 0, transport_failures: 0, block_start: {}, block_end: {} };
@@ -58,31 +91,7 @@ export async function runCensus(list, rpcUrls = DEFAULT_RPC, { log = () => {}, c
       t.readable = t.symbol !== null || t.supply !== null || t.owner !== null;
     });
     // next rounds: the owners, and the owners of owners
-    const code = new Map(), safe = new Map(), tl = new Set(), own = new Map(), delegated = new Set();
-    let front = [...new Set(toks.map((t) => t.owner).filter((a) => a && a !== ZERO && a !== DEAD))];
-    for (let depth = 0; depth < 6 && front.length; depth++) {
-      const fresh = front.filter((a) => !code.has(a));
-      const cm = await ch.codes(fresh);
-      for (const [a, c] of cm) { code.set(a, c.size); if (c.delegated) delegated.add(a); }
-      const contracts = fresh.filter((a) => (code.get(a) || 0) > 0);
-      const cc = [];
-      for (const a of contracts) for (const f of ["getThreshold", "getOwners", "getMinDelay", "owner"]) cc.push({ target: a, data: SEL[f] });
-      const rr = (await pool(chunks(cc, 200), 3, (d) => ch.multicall(d))).flat();
-      const next = new Set();
-      contracts.forEach((a, i) => {
-        const [th, ow, md, on] = rr.slice(i * 4, i * 4 + 4);
-        const thr = th.ok ? decUint(th.data) : undefined;
-        const n = ow.ok ? decArrayLength(ow.data) : undefined;
-        if (thr !== undefined && n !== undefined) safe.set(a, { threshold: Number(thr), n });
-        else if (md.ok) tl.add(a);
-        else if (on.ok) {
-          const x = decAddress(on.data);
-          if (x) { own.set(a, x); if (!code.has(x) && x !== ZERO && x !== DEAD) next.add(x); }
-        }
-      });
-      front = [...next];
-    }
-    const W = { code: (a) => code.get(a), safe: (a) => safe.get(a) || null, timelock: (a) => tl.has(a), owner: (a) => own.get(a) || null };
+    const { W, delegated } = await resolveWorld(ch, toks.map((t) => t.owner));
     for (const t of toks) {
       const r = { net: t.net, token: t.token, factory: t.factory, symbol: t.symbol, supply: t.supply, paused: t.paused, owner: t.owner, type: null, controller: null, chain: [], detail: null, e7702: false };
       if (!t.readable) r.type = "unreadable";

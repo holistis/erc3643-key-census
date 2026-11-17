@@ -1,0 +1,60 @@
+{
+ "measured": {
+  "log_source": {
+   "polygon": "https://gateway.tenderly.co/public/polygon",
+   "ethereum": "https://gateway.tenderly.co/public/mainnet"
+  },
+  "to_block": {
+   "polygon": 97478850,
+   "ethereum": 26435223
+  },
+  "events": {
+   "added": 6633,
+   "removed": 547,
+   "duplicate_adds": 0,
+   "unmatched_removes": 0
+  },
+  "transport_failures": 0,
+  "started": "2026-11-17T13:53:52.016Z",
+  "finished": "2026-11-17T13:59:06.265Z"
+ },
+ "summary": {
+  "tokens": 3427,
+  "active": 1052,
+  "with_agents": 3186,
+  "agents_total": 6086,
+  "agents_distinct": 789,
+  "agent_count": {
+   "0": 241,
+   "1": 1256,
+   "2": 1236,
+   "3": 515,
+   "4_or_more": 179
+  },
+  "agent_types": {
+   "account_direct": 4240,
+   "account_via_contract": 1554,
+   "other_contract": 244,
+   "renounced": 10,
+   "safe_multisig": 11,
+   "safe_threshold_1": 23,
+   "self_owned": 3,
+   "timelock": 1
+  },
+  "single_key_agent_all": 3148,
+  "single_key_agent_active": 1023,
+  "single_key_agent_direct_all": 2954,
+  "single_key_agent_direct_active": 949,
+  "level_all": {
+   "level0": 3375,
+   "level1": 10,
+   "not_classified": 42
+  },
+  "level_active": {
+   "level0": 1023,
+   "level1": 8,
+   "not_classified": 21
+  },
+  "owner_multisig_held_down": 0
+ }
+}

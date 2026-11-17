@@ -13,7 +13,7 @@
     "selftest": "node check.mjs --selftest",
     "verify-chain": "node check.mjs --verify-chain"
   },
-  "files": ["lib", "assets", "history", "history.mjs", "discover.mjs", "census.mjs", "check.mjs", "AGENTS.md", "llms.txt", "RECOUNTS.md", "data", "README.md", "README.es.md", "LICENSE", "CITATION.cff"],
+  "files": ["lib", "assets", "history", "history.mjs", "discover.mjs", "census.mjs", "agents.mjs", "check.mjs", "LEVELS.md", "AGENTS.md", "llms.txt", "RECOUNTS.md", "data", "README.md", "README.es.md", "LICENSE", "CITATION.cff"],
   "dependencies": {},
   "devDependencies": {}
 }
